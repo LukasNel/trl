@@ -16,7 +16,7 @@ import os
 import textwrap
 import warnings
 from collections import defaultdict
-from typing import Any, Callable, Optional, Union
+from typing import Any, Callable, Optional, Union, Dict
 from unittest.mock import patch
 
 import torch
