@@ -158,6 +158,8 @@ class GRPOTrainer(Trainer):
         callbacks: Optional[list[TrainerCallback]] = None,
         optimizers: tuple[Optional[torch.optim.Optimizer], Optional[torch.optim.lr_scheduler.LambdaLR]] = (None, None),
         peft_config: Optional["PeftConfig"] = None,
+        vllm_model_kwargs : Dict = {},
+        vllm_parameters_kwargs : Dict = {}
     ):
         # Args
         if args is None:
@@ -318,11 +320,13 @@ class GRPOTrainer(Trainer):
                         # directly reuse the KV cache if it shares the same prefix with one of the existing queries.
                         # This is particularly useful here because we generate completions from the same prompts.
                         enable_prefix_caching=True,
+                        **vllm_model_kwargs
                     )
                 self.sampling_params = SamplingParams(
                     n=self.num_generations,
                     temperature=args.temperature,
                     max_tokens=self.max_completion_length,
+                    **vllm_parameters_kwargs
                 )
 
             self._last_loaded_step = 0  # tag to avoid useless loading during grad checkpointing
